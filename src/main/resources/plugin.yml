@@ -1,0 +1,24 @@
+name: Reports
+version: '${project.version}'
+main: com.reogent.reports.Reports
+api-version: '1.16'
+depend: ["NBTAPI"]
+
+commands:
+  report:
+    usage: /report <player> <reason>
+  reports:
+    usage: /reports
+permissions:
+  reports.view:
+    description: Позволяет просматривать репорты
+    default: op
+  reports.bypass.cooldown:
+    description: Обход кулдауна на команду /report
+    default: op
+  reports.notify:
+    description: Разрешение на получение сообщений о приходе нового репорта
+    default: op
+  reports.reload:
+    description: Разрешение на /reports reload
+    default: op
