@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -69,6 +70,29 @@ public class PlayerListeners implements Listener {
             ReportItem.spyStartTime.remove(player.getUniqueId());
 
             sendMessage(player, MainGetter.exitSpy);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+        Player reportedPlayer = Bukkit.getPlayer(ReportItem.report.getReportedName());
+        Player player = event.getPlayer();
+        String message = event.getMessage();
+        if (ReportItem.isAnswering.containsKey(player.getUniqueId())) {
+            event.setCancelled(true);
+            if (message.equalsIgnoreCase("Отмена")) {
+                sendMessage(player, MainGetter.answerExit, false);
+                sendMessage(player, MainGetter.answerNotifyExit, false);
+                ReportItem.isAnswering.remove(player.getUniqueId());
+            } else {
+                sendMessage(player, MainGetter.answeringFormat
+                        .replace("{admin_name}", player.getName())
+                        .replace("{message}", message), false);
+                sendMessage(reportedPlayer, MainGetter.answeringFormat
+                        .replace("{admin_name}", player.getName())
+                        .replace("{message}", message), false);
+                ReportItem.isAnswering.remove(player.getUniqueId());
+            }
         }
     }
 

@@ -107,7 +107,6 @@ public class Reports extends JavaPlugin {
                 mainConfig.set(item.getPath(), item.getDefault());
             }
         }
-        Main.setFile(mainConfig.getConfig());
         mainConfig.saveConfig();
     }
 
@@ -126,13 +125,7 @@ public class Reports extends JavaPlugin {
                 guiConfig.set(item.getPath(), item.getDefault());
             }
         }
-        GUI.setFile(guiConfig.getConfig());
         guiConfig.saveConfig();
-    }
-
-    public void reloadPlugin() {
-        Bukkit.getPluginManager().disablePlugin(this);
-        Bukkit.getPluginManager().enablePlugin(this);
     }
 
     public BukkitAudiences getAudiences() {

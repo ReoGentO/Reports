@@ -20,7 +20,9 @@ public enum GUI {
             " <gray>Дата: <yellow>{date}",
             " ",
             " <gray><i>Нажмите <yellow>СКМ <gray>для удаления.",
-            " <gray><i>Нажмите <yellow>ЛКМ <gray>для наблюдения.</i>"}),
+            " <gray><i>Нажмите <yellow>ЛКМ <gray>для наблюдения.</i>",
+            " <gray><i>Нажмите <yellow>ПКМ <gray>чтобы ответить.</i>"
+    }),
 
     NEXT_PAGE_ITEM_MATERIAL("gui.next_page_item.material", "ARROW"),
     NEXT_PAGE_ITEM_NAME("gui.next_page_item.name", "<gradient:#9F9F9F:#515151>Сл. страница</gradient>"),

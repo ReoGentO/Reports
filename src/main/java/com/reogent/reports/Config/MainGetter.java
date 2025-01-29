@@ -21,6 +21,12 @@ public class MainGetter {
     public static String spyTime = mainConfig.getString("messages.spy_time");
     public static String reloadMessage = mainConfig.getString("messages.reload_message");
 
+    public static String answeringFormat = mainConfig.getString("messages.answers.answering_format");
+    public static String answeringMessage = mainConfig.getString("messages.answers.answering_message");
+    public static String answerExit = mainConfig.getString("messages.answers.answer_exit");
+    public static String answerNotifyPlayer = mainConfig.getString("messages.answers.answer_notify_player");
+    public static String answerNotifyExit = mainConfig.getString("messages.answers.answer_notify_exit");
+
     public static void reloadMainConfig() {
         mainConfig.reloadConfig();
         prefix = mainConfig.getString("prefix");
@@ -38,5 +44,10 @@ public class MainGetter {
         exitSpy = mainConfig.getString("messages.exit_spy");
         spyTime = mainConfig.getString("messages.spy_time");
         reloadMessage = mainConfig.getString("messages.reload_message");
+        answeringFormat = mainConfig.getString("messages.answers.answering_format");
+        answeringMessage = mainConfig.getString("messages.answers.answering_message");
+        answerExit = mainConfig.getString("messages.answers.answer_exit");
+        answerNotifyPlayer = mainConfig.getString("messages.answers.answer_notify_player");
+        answerNotifyExit = mainConfig.getString("messages.answers.answer_notify_exit");
     }
 }

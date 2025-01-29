@@ -1,7 +1,6 @@
 package com.reogent.reports.Inventory.gui_items;
 
 import com.reogent.reports.Config.GUIGetter;
-import com.reogent.reports.Config.Main;
 import com.reogent.reports.Config.MainGetter;
 import com.reogent.reports.DataBase.Models.Report;
 import com.reogent.reports.DataBase.ReportsDatabase;
@@ -13,7 +12,6 @@ import net.kyori.adventure.audience.Audience;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -36,14 +34,14 @@ import java.util.UUID;
 
 
 public class ReportItem extends AbstractItem {
-    public Report report;
+    public static Report report;
     private final Reports plugin;
     public File guiFile = new File(Reports.getInstance().getDataFolder(), "gui_settings.yml");
     public Config guiConfig = new Config(guiFile, 10, Reports.getInstance());
-
     public static HashMap<UUID, ItemStack[]> savedInventories = new HashMap<>();
     public static HashMap<UUID, Location> lastLocation = new HashMap<>();
     public static HashMap<UUID, Boolean> isFlying = new HashMap<>();
+    public static HashMap<UUID, Boolean> isAnswering = new HashMap<>();
     public static final Map<UUID, Instant> spyStartTime = new HashMap<>();
 
     public ReportItem(Report report, Reports plugin) {
@@ -67,14 +65,22 @@ public class ReportItem extends AbstractItem {
 
     @Override
     public void handleClick(@NotNull ClickType clickType, @NotNull Player player, @NotNull InventoryClickEvent event) {
+        Player reportedPlayer = Bukkit.getPlayer(report.getReportedName());
         if (clickType == ClickType.MIDDLE) {
             ReportsDatabase.removeReport(report.getId());
             Utils.sendMessage(player, MainGetter.deleteReport
                     .replace("{id}", String.valueOf(report.getId())));
             ReportsInventory inventory = new ReportsInventory(plugin, player);
             inventory.open();
+
+        } else if (clickType == ClickType.RIGHT) {
+            isAnswering.put(player.getUniqueId(), true);
+            Utils.sendMessage(reportedPlayer, MainGetter.answerNotifyPlayer
+                    .replace("{player}", player.getName())
+                    .replace("{id}", String.valueOf(report.getId())), false);
+            Utils.sendMessage(player, MainGetter.answeringMessage.replace("{reporter}", report.getReporterName()), false);
+            player.closeInventory();
         } else if (clickType == ClickType.LEFT) {
-            Player reportedPlayer = Bukkit.getPlayer(report.getReportedName());
             if (reportedPlayer != null) {
 
                 if (!savedInventories.isEmpty() && !isFlying.isEmpty() && !lastLocation.isEmpty()) {
