@@ -1,6 +1,6 @@
 package com.reogent.reports.Commands;
 
-import com.reogent.reports.Config.MainGetter;
+import com.reogent.reports.Config.MsgGetter;
 import com.reogent.reports.DataBase.ReportsDatabase;
 import com.reogent.reports.Reports;
 import org.bukkit.command.Command;
@@ -21,12 +21,12 @@ public class ReportCommand implements CommandExecutor {
             } else {
                 Player player = (Player) sender;
                 if (args.length < 1) {
-                    sendMessage(player, MainGetter.usage);
+                    sendMessage(player, MsgGetter.usage);
                     return true;
                 }
                 if (!Reports.getInstance().mainConfig.getBoolean("self_reports")) {
                     if (args[0].equalsIgnoreCase(player.getName())) {
-                        sendMessage(player, MainGetter.selfMessage);
+                        sendMessage(player, MsgGetter.selfMessage);
                         return true;
                     }
                 }
@@ -40,7 +40,7 @@ public class ReportCommand implements CommandExecutor {
                     reason = "Не указана";
                 }
                 ReportsDatabase.addReport(player.getName(), reportedName, reason);
-                sendMessage(player, MainGetter.reportMessage.replace("{player}", reportedName).replace("{reason}", reason), false);
+                sendMessage(player, MsgGetter.reportMessage.replace("{player}", reportedName).replace("{reason}", reason), false);
             }
             return true;
         }

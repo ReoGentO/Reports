@@ -2,6 +2,7 @@ package com.reogent.reports.Commands;
 
 import com.reogent.reports.Config.GUIGetter;
 import com.reogent.reports.Config.MainGetter;
+import com.reogent.reports.Config.MsgGetter;
 import com.reogent.reports.Inventory.ReportsInventory;
 import com.reogent.reports.Reports;
 import org.bukkit.command.Command;
@@ -23,16 +24,17 @@ public class ReportsCommand implements CommandExecutor {
                 return true;
             }
             if (!player.hasPermission("reports.view")) {
-                sendMessage(player, MainGetter.noPerm);
+                sendMessage(player, MsgGetter.noPerm);
                 return true;
             }
             if (!player.hasPermission("reports.reload") && args[0].equalsIgnoreCase("reload")) {
-                sendMessage(player, MainGetter.noPerm);
+                sendMessage(player, MsgGetter.noPerm);
                 return true;
             } else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
                 MainGetter.reloadMainConfig();
+                MsgGetter.reloadMsgConfig();
                 GUIGetter.reloadGuiConfig();
-                sendMessage(player, MainGetter.reloadMessage);
+                sendMessage(player, MsgGetter.reloadMessage);
                 return true;
             }
             new ReportsInventory(Reports.getInstance(), player).open();

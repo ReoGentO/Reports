@@ -2,6 +2,7 @@ package com.reogent.reports.Utils;
 
 import com.reogent.reports.Config.Main;
 import com.reogent.reports.Config.MainGetter;
+import com.reogent.reports.Config.MsgGetter;
 import com.reogent.reports.Reports;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -126,13 +127,13 @@ public class Utils {
 
     public static void broadcastMessage(String message) {
         Audience playersAudience = audiences.players();
-        playersAudience.sendMessage(mm.deserialize(MainGetter.prefix + message));
+        playersAudience.sendMessage(mm.deserialize(MsgGetter.prefix + message));
     }
 
     public static void sendMessage(Player player, String message, boolean withPrefix) {
         Audience playerAudience = audiences.player(player);
         if (withPrefix) {
-            playerAudience.sendMessage(mm.deserialize(MainGetter.prefix + message));
+            playerAudience.sendMessage(mm.deserialize(MsgGetter.prefix + message));
         } else {
             playerAudience.sendMessage(mm.deserialize(message));
         }
@@ -140,7 +141,7 @@ public class Utils {
 
     public static void sendMessage(Player player, String message, TagResolver... placeholder) {
         Audience playerAudience = audiences.player(player);
-        playerAudience.sendMessage(mm.deserialize(MainGetter.prefix + message, placeholder));
+        playerAudience.sendMessage(mm.deserialize(MsgGetter.prefix + message, placeholder));
     }
 
     public static String formatTime(long seconds) {

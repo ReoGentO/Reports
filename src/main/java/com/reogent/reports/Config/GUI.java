@@ -1,10 +1,5 @@
 package com.reogent.reports.Config;
 
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.util.List;
-
 public enum GUI {
     GUI_NAME("gui.name", "<gradient:#FF0000:#1800FF>Репорты</gradient>"),
 
@@ -37,50 +32,10 @@ public enum GUI {
 
     private String path;
     private Object def;
-    private static YamlConfiguration GUI;
 
     GUI(String path, Object value) {
         this.path = path;
         this.def = value;
-    }
-
-    public static void setFile(YamlConfiguration config) {
-        GUI = config;
-    }
-
-    public String getString() {
-        Object value = GUI.get(this.path, def);
-        if (value instanceof String) {
-            return ChatColor.translateAlternateColorCodes('&', (String) value);
-        }
-        return null;
-    }
-    public String[] getStringArray() {
-        Object value = GUI.get(this.path, def);
-        if (value instanceof List<?>) {
-            List<?> list = (List<?>) value;
-            String[] stringArray = new String[list.size()];
-            for (int i = 0; i < list.size(); i++) {
-                Object element = list.get(i);
-                if (element instanceof String) {
-                    stringArray[i] = ChatColor.translateAlternateColorCodes('&', (String) element);
-                }
-            }
-            return stringArray;
-        }
-        return null;
-    }
-
-    public int getInt() {
-        Object value = GUI.get(this.path, def);
-        if(value instanceof Integer) return (int) value;
-        return -1;
-    }
-
-    public boolean getBoolean() {
-        Object value = GUI.get(this.path, def);
-        if(value instanceof Boolean) return (boolean) value;
-        return false;
     }
 
     public Object getDefault()

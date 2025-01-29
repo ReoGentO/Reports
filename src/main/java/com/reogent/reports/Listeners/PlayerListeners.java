@@ -2,6 +2,7 @@ package com.reogent.reports.Listeners;
 
 import com.reogent.reports.Config.Main;
 import com.reogent.reports.Config.MainGetter;
+import com.reogent.reports.Config.MsgGetter;
 import com.reogent.reports.Inventory.gui_items.ReportItem;
 import com.reogent.reports.Reports;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -60,16 +61,17 @@ public class PlayerListeners implements Listener {
         if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) && nbtItem.getBoolean("exit")) {
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
             player.getInventory().clear();
-            player.setFlying(ReportItem.isFlying.get(player.getUniqueId()));
-            player.teleport(ReportItem.lastLocation.get(player.getUniqueId()));
             player.getInventory().setContents(ReportItem.savedInventories.get(player.getUniqueId()));
-
+            if (MainGetter.backTeleport) {
+                player.setFlying(ReportItem.isFlying.get(player.getUniqueId()));
+                player.teleport(ReportItem.lastLocation.get(player.getUniqueId()));
+                ReportItem.lastLocation.remove(player.getUniqueId());
+                ReportItem.isFlying.remove(player.getUniqueId());
+            }
             ReportItem.savedInventories.remove(player.getUniqueId());
-            ReportItem.lastLocation.remove(player.getUniqueId());
-            ReportItem.isFlying.remove(player.getUniqueId());
             ReportItem.spyStartTime.remove(player.getUniqueId());
 
-            sendMessage(player, MainGetter.exitSpy);
+            sendMessage(player, MsgGetter.exitSpy);
         }
     }
 
@@ -81,14 +83,14 @@ public class PlayerListeners implements Listener {
         if (ReportItem.isAnswering.containsKey(player.getUniqueId())) {
             event.setCancelled(true);
             if (message.equalsIgnoreCase("Отмена")) {
-                sendMessage(player, MainGetter.answerExit, false);
-                sendMessage(player, MainGetter.answerNotifyExit, false);
+                sendMessage(player, MsgGetter.answerExit, false);
+                sendMessage(player, MsgGetter.answerNotifyExit, false);
                 ReportItem.isAnswering.remove(player.getUniqueId());
             } else {
-                sendMessage(player, MainGetter.answeringFormat
+                sendMessage(player, MsgGetter.answeringFormat
                         .replace("{admin_name}", player.getName())
                         .replace("{message}", message), false);
-                sendMessage(reportedPlayer, MainGetter.answeringFormat
+                sendMessage(reportedPlayer, MsgGetter.answeringFormat
                         .replace("{admin_name}", player.getName())
                         .replace("{message}", message), false);
                 ReportItem.isAnswering.remove(player.getUniqueId());
@@ -112,7 +114,7 @@ public class PlayerListeners implements Listener {
                     int time = Integer.parseInt(String.valueOf(timeSinceLastCommand.getSeconds()));
                     if (timeSinceLastCommand.getSeconds() < cooldown) {
                         event.setCancelled(true);
-                        sendMessage(player, MainGetter.cooldownMessage.replace("{time}", String.valueOf(cooldown - time)));
+                        sendMessage(player, MsgGetter.cooldownMessage.replace("{time}", String.valueOf(cooldown - time)));
                         return;
                     } else {
                         cooldownMap.remove(player.getUniqueId());
@@ -128,7 +130,7 @@ public class PlayerListeners implements Listener {
                         if (admin.hasPermission("reports.notify")) {
                             admin.playSound(player.getLocation(), Sound.ENTITY_WITHER_SHOOT, 0.5F, 1);
                             admin.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
-                            sendMessage(admin, MainGetter.reportAnnouncement);
+                            sendMessage(admin, MsgGetter.reportAnnouncement);
                         }
                     }
                 }
@@ -139,7 +141,7 @@ public class PlayerListeners implements Listener {
                         if (admin.hasPermission("reports.notify")) {
                             admin.playSound(player.getLocation(), Sound.ENTITY_WITHER_SHOOT, 0.5F, 1);
                             admin.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
-                            sendMessage(admin, MainGetter.reportAnnouncement);
+                            sendMessage(admin, MsgGetter.reportAnnouncement);
                         }
                     }
                 }

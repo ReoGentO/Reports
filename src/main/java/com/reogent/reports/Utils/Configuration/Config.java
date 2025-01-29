@@ -180,16 +180,6 @@ public class Config {
     }
     public void loadConfig() {
         this.config = YamlConfiguration.loadConfiguration(file);
-        try (InputStreamReader reader = new InputStreamReader(pl.getResource(file.getName()), StandardCharsets.UTF_8)){
-            if (reader!=null){
-                YamlConfiguration defaults = YamlConfiguration.loadConfiguration(reader);
-                this.config.setDefaults(defaults);
-            }
-
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
     }
     /*
      * Adds header block to config

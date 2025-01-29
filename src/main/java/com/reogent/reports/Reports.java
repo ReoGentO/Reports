@@ -6,6 +6,7 @@ import com.reogent.reports.Commands.ReportsCommand;
 import com.reogent.reports.Commands.ReportsTabCompleter;
 import com.reogent.reports.Config.GUI;
 import com.reogent.reports.Config.Main;
+import com.reogent.reports.Config.Messages;
 import com.reogent.reports.DataBase.ReportsDatabase;
 import com.reogent.reports.Listeners.PlayerListeners;
 import com.reogent.reports.Utils.Configuration.Config;
@@ -26,6 +27,9 @@ public class Reports extends JavaPlugin {
     public File guiFile = new File(getDataFolder(), "gui_settings.yml");
     public Config guiConfig = new Config(guiFile, 10, this);
 
+    public static File msgFile;
+    public static Config msgConfig;
+
     public BukkitAudiences adventure() {
         if(this.audiences == null) {
             throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
@@ -35,6 +39,7 @@ public class Reports extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        instance = this;
         // Load configs
         if (!mainFile.exists()) {
             mainConfig.saveConfig();
@@ -44,12 +49,23 @@ public class Reports extends JavaPlugin {
             guiConfig.saveConfig();
             loadGUISettings();
         }
-        instance = this;
-        audiences = BukkitAudiences.create(this);
+
+        File messagesFolder = new File(getDataFolder() + "/messages");
         File dataFolder = getDataFolder();
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
         }
+        if (!messagesFolder.exists()) {
+            messagesFolder.mkdirs();
+        }
+        String lang = mainConfig.getString("lang");
+        msgFile = new File(getDataFolder() + "/messages", "lang-" + lang + ".yml");
+        msgConfig = new Config(msgFile, 10, this);
+        if (!msgFile.exists()) {
+            msgConfig.saveConfig();
+            loadLangConfig();
+        }
+        audiences = BukkitAudiences.create(this);
         // Load DB
         String dbPath = dataFolder.getAbsolutePath() + File.separator + "reports.db";
 
@@ -87,21 +103,27 @@ public class Reports extends JavaPlugin {
         }
     }
 
-
     public void loadMainConfig() {
+        if (!mainFile.exists()) {
+            mainConfig.saveConfig();
+        }
         mainConfig.setHeader(new String[]{"Плагин на репорты от ReoGenT со слежкой!", "Telegram: https://t.me/uwuweweweonotwe", "Discord: TheBlackInfinity"});
         for (Main item : Main.values()) {
             if (mainConfig.getString(item.getPath()) == null) {
-                if (Objects.equals(item.getPath(), "self_reports")) {
-                    mainConfig.set(item.getPath(), item.getDefault(), "Если true, то игроки могут репортить сами себя");
-                    continue;
-                }
-                if (Objects.equals(item.getPath(), "messages.enter_spy")) {
-                    mainConfig.set(item.getPath(), item.getDefault(), "Сообщения плагина");
+                if (Objects.equals(item.getPath(), "lang")) {
+                    mainConfig.set(item.getPath(), item.getDefault(), new String[]{"If you want to create your own language file,", "enter the code that you entered in the file name", "(lang-{Here will be your code}.yml)"});
                     continue;
                 }
                 if (Objects.equals(item.getPath(), "cooldown")) {
                     mainConfig.set(item.getPath(), item.getDefault(), new String[]{"Кулдаун между репортами", "Введите -1 для отключения"});
+                    continue;
+                }
+                if (Objects.equals(item.getPath(), "self_reports")) {
+                    mainConfig.set(item.getPath(), item.getDefault(), "Если true, то игроки могут репортить сами себя");
+                    continue;
+                }
+                if (Objects.equals(item.getPath(), "back_teleportation")) {
+                    mainConfig.set(item.getPath(), item.getDefault(), new String[]{"Если false, то при выходе из режима слежки", "игрок не будет телепортирован обратно"});
                     continue;
                 }
                 mainConfig.set(item.getPath(), item.getDefault());
@@ -111,6 +133,9 @@ public class Reports extends JavaPlugin {
     }
 
     public void loadGUISettings() {
+        if (!guiFile.exists()) {
+            guiConfig.saveConfig();
+        }
         guiConfig.setHeader(new String[]{"Конфигурация GUI и др.", "Внимание! Material устанавливаем в верхнем регистре!", "Telegram: https://t.me/uwuweweweonotwe", "Discord: TheBlackInfinity"});
         for (GUI item : GUI.values()) {
             if (guiConfig.getString(item.getPath()) == null) {
@@ -126,6 +151,19 @@ public class Reports extends JavaPlugin {
             }
         }
         guiConfig.saveConfig();
+    }
+
+    public void loadLangConfig() {
+        if (!msgFile.exists()) {
+            msgConfig.saveConfig();
+        }
+        msgConfig.setHeader(new String[]{"Языковой файл", "Telegram: https://t.me/uwuweweweonotwe", "Discord: TheBlackInfinity"});
+        for (Messages item : Messages.values()) {
+            if (msgConfig.getString(item.getPath()) == null) {
+                msgConfig.set(item.getPath(), item.getDefault());
+            }
+        }
+        msgConfig.saveConfig();
     }
 
     public BukkitAudiences getAudiences() {

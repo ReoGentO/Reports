@@ -2,6 +2,7 @@ package com.reogent.reports.Inventory.gui_items;
 
 import com.reogent.reports.Config.GUIGetter;
 import com.reogent.reports.Config.MainGetter;
+import com.reogent.reports.Config.MsgGetter;
 import com.reogent.reports.DataBase.Models.Report;
 import com.reogent.reports.DataBase.ReportsDatabase;
 import com.reogent.reports.Inventory.ReportsInventory;
@@ -68,17 +69,17 @@ public class ReportItem extends AbstractItem {
         Player reportedPlayer = Bukkit.getPlayer(report.getReportedName());
         if (clickType == ClickType.MIDDLE) {
             ReportsDatabase.removeReport(report.getId());
-            Utils.sendMessage(player, MainGetter.deleteReport
+            Utils.sendMessage(player, MsgGetter.deleteReport
                     .replace("{id}", String.valueOf(report.getId())));
             ReportsInventory inventory = new ReportsInventory(plugin, player);
             inventory.open();
 
         } else if (clickType == ClickType.RIGHT) {
             isAnswering.put(player.getUniqueId(), true);
-            Utils.sendMessage(reportedPlayer, MainGetter.answerNotifyPlayer
+            Utils.sendMessage(reportedPlayer, MsgGetter.answerNotifyPlayer
                     .replace("{player}", player.getName())
                     .replace("{id}", String.valueOf(report.getId())), false);
-            Utils.sendMessage(player, MainGetter.answeringMessage.replace("{reporter}", report.getReporterName()), false);
+            Utils.sendMessage(player, MsgGetter.answeringMessage.replace("{reporter}", report.getReporterName()), false);
             player.closeInventory();
         } else if (clickType == ClickType.LEFT) {
             if (reportedPlayer != null) {
@@ -95,12 +96,14 @@ public class ReportItem extends AbstractItem {
                     return;
                 }
 
-                if (player.isFlying()) {
-                    isFlying.put(player.getUniqueId(), true);
-                } else {
-                    isFlying.put(player.getUniqueId(), false);
+                if (MainGetter.backTeleport) {
+                    if (player.isFlying()) {
+                        isFlying.put(player.getUniqueId(), true);
+                    } else {
+                        isFlying.put(player.getUniqueId(), false);
+                    }
+                    lastLocation.put(player.getUniqueId(), player.getLocation());
                 }
-                lastLocation.put(player.getUniqueId(), player.getLocation());
                 savedInventories.put(player.getUniqueId(), player.getInventory().getContents());
                 spyStartTime.put(player.getUniqueId(), Instant.now());
 
@@ -127,9 +130,9 @@ public class ReportItem extends AbstractItem {
 
                 createTimer(player);
 
-                Utils.sendMessage(player, MainGetter.enterSpy);
+                Utils.sendMessage(player, MsgGetter.enterSpy);
             } else {
-                Utils.sendMessage(player, MainGetter.findError);
+                Utils.sendMessage(player, MsgGetter.findError);
             }
         }
         notifyWindows();
@@ -147,7 +150,7 @@ public class ReportItem extends AbstractItem {
                 Duration duration = Duration.between(start, Instant.now());
                 String time = Utils.formatTime(duration.getSeconds());
                 Audience playerAudience = Reports.getInstance().getAudiences().player(player);
-                playerAudience.sendActionBar(Utils.formatC(MainGetter.spyTime.replace("{time}", time)));
+                playerAudience.sendActionBar(Utils.formatC(MsgGetter.spyTime.replace("{time}", time)));
             }
         }.runTaskTimer(Reports.getInstance(), 0L, 20L);
     }
