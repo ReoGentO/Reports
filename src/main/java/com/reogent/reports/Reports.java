@@ -21,7 +21,7 @@ import java.util.Objects;
 public class Reports extends JavaPlugin {
     private BukkitAudiences audiences;
     private static Reports instance;
-
+    
     public File mainFile = new File(getDataFolder(), "main.yml");
     public Config mainConfig = new Config(mainFile, 10, this);
     public File guiFile = new File(getDataFolder(), "gui_settings.yml");
@@ -41,6 +41,15 @@ public class Reports extends JavaPlugin {
     public void onEnable() {
         instance = this;
         // Load configs
+        File messagesFolder = new File(getDataFolder() + "/messages");
+        File dataFolder = getDataFolder();
+        if (!dataFolder.exists()) {
+            dataFolder.mkdirs();
+        }
+        if (!messagesFolder.exists()) {
+            messagesFolder.mkdirs();
+        }
+
         if (!mainFile.exists()) {
             mainConfig.saveConfig();
             loadMainConfig();
@@ -50,14 +59,6 @@ public class Reports extends JavaPlugin {
             loadGUISettings();
         }
 
-        File messagesFolder = new File(getDataFolder() + "/messages");
-        File dataFolder = getDataFolder();
-        if (!dataFolder.exists()) {
-            dataFolder.mkdirs();
-        }
-        if (!messagesFolder.exists()) {
-            messagesFolder.mkdirs();
-        }
         String lang = mainConfig.getString("lang");
         msgFile = new File(getDataFolder() + "/messages", "lang-" + lang + ".yml");
         msgConfig = new Config(msgFile, 10, this);

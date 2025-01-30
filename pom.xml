@@ -6,7 +6,7 @@
 
   <groupId>com.reogent</groupId>
   <artifactId>Reports</artifactId>
-  <version>0.6b</version>
+  <version>0.8b</version>
   <packaging>jar</packaging>
 
   <name>Reports</name>

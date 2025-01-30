@@ -2,7 +2,6 @@ name: Reports
 version: '${project.version}'
 main: com.reogent.reports.Reports
 api-version: '1.16'
-depend: ["NBTAPI"]
 
 commands:
   report:
