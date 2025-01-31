@@ -3,8 +3,11 @@ package com.reogent.reports.Config;
 import com.reogent.reports.Reports;
 import com.reogent.reports.Utils.Configuration.Config;
 
+import java.io.File;
+
 public class MsgGetter {
-    private static final Config msgConfig = Reports.msgConfig;
+    private static File msgFile = new File(Reports.getInstance().getDataFolder() + "/messages", "lang-" + MainGetter.lang + ".yml");
+    private static Config msgConfig = new Config(msgFile, 10, Reports.getInstance());
 
     public static String prefix = msgConfig.getString("prefix");
     public static String enterSpy = msgConfig.getString("messages.enter_spy");
@@ -28,6 +31,8 @@ public class MsgGetter {
 
     public static void reloadMsgConfig() {
         msgConfig.reloadConfig();
+        msgFile = new File(Reports.getInstance().getDataFolder() + "/messages", "lang-" + MainGetter.lang + ".yml");
+        msgConfig = new Config(msgFile, 10, Reports.getInstance());
         prefix = msgConfig.getString("prefix");
         enterSpy = msgConfig.getString("messages.enter_spy");
         deleteReport = msgConfig.getString("messages.delete_report");

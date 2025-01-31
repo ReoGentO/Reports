@@ -1,15 +1,17 @@
 package com.reogent.reports.Commands;
 
-import com.reogent.reports.Config.GUIGetter;
-import com.reogent.reports.Config.MainGetter;
-import com.reogent.reports.Config.MsgGetter;
+import com.reogent.reports.Config.*;
 import com.reogent.reports.Inventory.ReportsInventory;
 import com.reogent.reports.Reports;
+import com.reogent.reports.Utils.Configuration.Config;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 import static com.reogent.reports.Utils.Utils.sendMessage;
 
@@ -32,8 +34,8 @@ public class ReportsCommand implements CommandExecutor {
                 return true;
             } else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
                 MainGetter.reloadMainConfig();
-                MsgGetter.reloadMsgConfig();
                 GUIGetter.reloadGuiConfig();
+                MsgGetter.reloadMsgConfig();
                 sendMessage(player, MsgGetter.reloadMessage);
                 return true;
             }

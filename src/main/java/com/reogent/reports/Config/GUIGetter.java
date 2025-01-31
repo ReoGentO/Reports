@@ -3,12 +3,13 @@ package com.reogent.reports.Config;
 import com.reogent.reports.Reports;
 import com.reogent.reports.Utils.Configuration.Config;
 import org.bukkit.Material;
-import xyz.xenondevs.inventoryaccess.component.ComponentWrapper;
 
-import java.util.List;
+import java.io.File;
 
 public class GUIGetter {
-    private static final Config guiConfig = Reports.getInstance().guiConfig;
+    public static File guiFile = new File(Reports.getInstance().getDataFolder() + "/gui_lang", "gui_lang-" + MainGetter.lang + ".yml");
+    private static Config guiConfig = new Config(guiFile, 10, Reports.getInstance());
+
     public static String guiName = guiConfig.getString("gui.name");
 
     public static Material borderItemMaterial = guiConfig.getMaterial("gui.border_item.material");
@@ -32,10 +33,12 @@ public class GUIGetter {
 
     public static void reloadGuiConfig() {
         guiConfig.reloadConfig();
+        guiFile = new File(Reports.getInstance().getDataFolder() + "/gui_lang", "gui_lang-" + MainGetter.lang + ".yml");
+        guiConfig = new Config(guiFile, 10, Reports.getInstance());
         guiName = guiConfig.getString("gui.name");
 
         borderItemMaterial = guiConfig.getMaterial("gui.border_item.material");
-        borderItemName = guiConfig.getString("gui.border_name");
+        borderItemName = guiConfig.getString("gui.border_item.name");
 
         reportMaterial = guiConfig.getMaterial("gui.report_item.material");
         reportItemName = guiConfig.getString("gui.report_item.name");

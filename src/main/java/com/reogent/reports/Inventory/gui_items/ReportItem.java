@@ -37,7 +37,7 @@ import java.util.UUID;
 public class ReportItem extends AbstractItem {
     public static Report report;
     private final Reports plugin;
-    public File guiFile = new File(Reports.getInstance().getDataFolder(), "gui_settings.yml");
+    public File guiFile = new File(Reports.getInstance().getDataFolder() + "/gui_lang", "gui_lang-" + MainGetter.lang + ".yml");
     public Config guiConfig = new Config(guiFile, 10, Reports.getInstance());
     public static HashMap<UUID, ItemStack[]> savedInventories = new HashMap<>();
     public static HashMap<UUID, Location> lastLocation = new HashMap<>();

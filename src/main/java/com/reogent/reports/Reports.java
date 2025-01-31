@@ -4,9 +4,7 @@ import com.reogent.reports.Commands.ReportCommand;
 import com.reogent.reports.Commands.ReportTabCompleter;
 import com.reogent.reports.Commands.ReportsCommand;
 import com.reogent.reports.Commands.ReportsTabCompleter;
-import com.reogent.reports.Config.GUI;
-import com.reogent.reports.Config.Main;
-import com.reogent.reports.Config.Messages;
+import com.reogent.reports.Config.*;
 import com.reogent.reports.DataBase.ReportsDatabase;
 import com.reogent.reports.Listeners.PlayerListeners;
 import com.reogent.reports.Utils.Configuration.Config;
@@ -24,11 +22,6 @@ public class Reports extends JavaPlugin {
     
     public File mainFile = new File(getDataFolder(), "main.yml");
     public Config mainConfig = new Config(mainFile, 10, this);
-    public File guiFile = new File(getDataFolder(), "gui_settings.yml");
-    public Config guiConfig = new Config(guiFile, 10, this);
-
-    public static File msgFile;
-    public static Config msgConfig;
 
     public BukkitAudiences adventure() {
         if(this.audiences == null) {
@@ -42,6 +35,7 @@ public class Reports extends JavaPlugin {
         instance = this;
         // Load configs
         File messagesFolder = new File(getDataFolder() + "/messages");
+        File guiMessagesFolder = new File(getDataFolder() + "/gui_lang");
         File dataFolder = getDataFolder();
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
@@ -49,23 +43,17 @@ public class Reports extends JavaPlugin {
         if (!messagesFolder.exists()) {
             messagesFolder.mkdirs();
         }
+        if (!guiMessagesFolder.exists()) {
+            guiMessagesFolder.mkdirs();
+        }
 
         if (!mainFile.exists()) {
             mainConfig.saveConfig();
             loadMainConfig();
         }
-        if (!guiFile.exists()) {
-            guiConfig.saveConfig();
-            loadGUISettings();
-        }
+        loadGUILangConfig();
+        loadLangConfig();
 
-        String lang = mainConfig.getString("lang");
-        msgFile = new File(getDataFolder() + "/messages", "lang-" + lang + ".yml");
-        msgConfig = new Config(msgFile, 10, this);
-        if (!msgFile.exists()) {
-            msgConfig.saveConfig();
-            loadLangConfig();
-        }
         audiences = BukkitAudiences.create(this);
         // Load DB
         String dbPath = dataFolder.getAbsolutePath() + File.separator + "reports.db";
@@ -112,7 +100,7 @@ public class Reports extends JavaPlugin {
         for (Main item : Main.values()) {
             if (mainConfig.getString(item.getPath()) == null) {
                 if (Objects.equals(item.getPath(), "lang")) {
-                    mainConfig.set(item.getPath(), item.getDefault(), new String[]{"If you want to create your own language file,", "enter the code that you entered in the file name", "(lang-{Here will be your code}.yml)"});
+                    mainConfig.set(item.getPath(), item.getDefault(), new String[]{"If you want to create your own language file,", "enter the code that you entered in the file name", "(lang-{Here will be your code}.yml)", "This variable acts on the GUI too!"});
                     continue;
                 }
                 if (Objects.equals(item.getPath(), "cooldown")) {
@@ -133,38 +121,44 @@ public class Reports extends JavaPlugin {
         mainConfig.saveConfig();
     }
 
-    public void loadGUISettings() {
-        if (!guiFile.exists()) {
-            guiConfig.saveConfig();
-        }
-        guiConfig.setHeader(new String[]{"Конфигурация GUI и др.", "Внимание! Material устанавливаем в верхнем регистре!", "Telegram: https://t.me/uwuweweweonotwe", "Discord: TheBlackInfinity"});
-        for (GUI item : GUI.values()) {
-            if (guiConfig.getString(item.getPath()) == null) {
-                if (Objects.equals(item.getPath(), "gui.name")) {
-                    guiConfig.set(item.getPath(), item.getDefault(), "Текст");
-                    continue;
-                }
-                if (Objects.equals(item.getPath(), "gui_border_material")) {
-                    guiConfig.set(item.getPath(), item.getDefault(), "Настройки GUI");
-                    continue;
-                }
-                guiConfig.set(item.getPath(), item.getDefault());
-            }
-        }
-        guiConfig.saveConfig();
-    }
-
     public void loadLangConfig() {
+        String lang = mainConfig.getString("lang");
+        File msgFile = new File(getDataFolder() + "/messages", "lang-" + lang + ".yml");
+        Config msgConfig = new Config(msgFile, 10, this);
         if (!msgFile.exists()) {
             msgConfig.saveConfig();
-        }
-        msgConfig.setHeader(new String[]{"Языковой файл", "Telegram: https://t.me/uwuweweweonotwe", "Discord: TheBlackInfinity"});
-        for (Messages item : Messages.values()) {
-            if (msgConfig.getString(item.getPath()) == null) {
-                msgConfig.set(item.getPath(), item.getDefault());
+            msgConfig.setHeader(new String[]{"Языковой файл", "Не забудь поменять", "lang в main.yml", "Telegram: https://t.me/uwuweweweonotwe", "Discord: TheBlackInfinity"});
+            for (Messages item : Messages.values()) {
+                if (msgConfig.getString(item.getPath()) == null) {
+                    msgConfig.set(item.getPath(), item.getDefault());
+                }
             }
+            msgConfig.saveConfig();
         }
-        msgConfig.saveConfig();
+    }
+
+    public void loadGUILangConfig() {
+        String lang = mainConfig.getString("lang");
+        File guiFile = new File(getDataFolder() + "/gui_lang", "gui_lang-" + lang + ".yml");
+        Config guiConfig = new Config(guiFile, 10, this);
+        if (!guiFile.exists()) {
+            guiConfig.saveConfig();
+            guiConfig.setHeader(new String[]{"Языковой файл для GUI", "Не забудь поменять", "lang в main.yml", "Telegram: https://t.me/uwuweweweonotwe", "Discord: TheBlackInfinity"});
+            for (GUI item : GUI.values()) {
+                if (guiConfig.getString(item.getPath()) == null) {
+                    if (Objects.equals(item.getPath(), "gui.name")) {
+                        guiConfig.set(item.getPath(), item.getDefault(), "Текст");
+                        continue;
+                    }
+                    if (Objects.equals(item.getPath(), "gui_border_material")) {
+                        guiConfig.set(item.getPath(), item.getDefault(), "Настройки GUI");
+                        continue;
+                    }
+                    guiConfig.set(item.getPath(), item.getDefault());
+                }
+            }
+            guiConfig.saveConfig();
+        }
     }
 
     public BukkitAudiences getAudiences() {

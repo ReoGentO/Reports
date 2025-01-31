@@ -1,6 +1,7 @@
 package com.reogent.reports.Inventory.gui_items;
 
 import com.reogent.reports.Config.GUIGetter;
+import com.reogent.reports.Config.MainGetter;
 import com.reogent.reports.Reports;
 import com.reogent.reports.Utils.Configuration.Config;
 import com.reogent.reports.Utils.Utils;
@@ -12,7 +13,7 @@ import xyz.xenondevs.invui.item.impl.controlitem.PageItem;
 import java.io.File;
 
 public class BackItem extends PageItem {
-    public File guiFile = new File(Reports.getInstance().getDataFolder(), "gui_settings.yml");
+    public File guiFile = new File(Reports.getInstance().getDataFolder() + "/gui_lang", "gui_lang-" + MainGetter.lang + ".yml");
     public Config guiConfig = new Config(guiFile, 10, Reports.getInstance());
 
     public BackItem() {
