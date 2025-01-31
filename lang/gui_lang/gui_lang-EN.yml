@@ -1,0 +1,42 @@
+# 
+# +----------------------------------------------------+ #
+# <                   GUI Language File                > #
+# <                Don't forget to change              > #
+# <                  lang in main.yml                 > #
+# <       Telegram: https://t.me/uwuweweweonotwe       > #
+# <             Discord: TheBlackInfinity              > #
+# +----------------------------------------------------+ #
+
+
+# Text
+gui:
+  name: <gradient:#FF0000:#1800FF>Reports</gradient>
+  border_item:
+    material: ORANGE_STAINED_GLASS_PANE
+    name: ' '
+  report_item:
+    material: PAPER
+    name: '<gray>Report ID: <aqua>{id}'
+    lore:
+    - ' <gray>From: <green>{reporter_player}'
+    - ' <gray>Violator: <red>{reported_player}'
+    - ' <gray>Reason: <white>{reason}'
+    - ' <gray>Date: <yellow>{date}'
+    - ' '
+    - ' <gray><i>Click <yellow>MMB <gray>to delete.'
+    - ' <gray><i>Click <yellow>LMB <gray>to observe.</i>'
+    - ' <gray><i>Click <yellow>RMB <gray>to respond.</i>'
+  next_page_item:
+    material: ARROW
+    name: <gradient:#9F9F9F:#515151>Next page</gradient>
+    lore_has:
+    - <gray>Go to page {next_page}/{all_pages}
+    lore_none:
+    - <gray>No more pages!
+  prev_page_item:
+    material: ARROW
+    name: <gradient:#9F9F9F:#515151>Previous page</gradient>
+    lore_has:
+    - <gray>Go to page {prev_page}/{all_pages}
+    lore_none:
+    - <gray>No more pages!
